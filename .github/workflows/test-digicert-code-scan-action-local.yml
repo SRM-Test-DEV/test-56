@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run DigiCert Code Scan composite action (local)
-        uses: ./.github/actions/digicert-code-scan
+        uses: digicert/srm-github-action@master
         with:
           override-backend-host: https://sailorly-unpreciously-zoey.ngrok-free.dev
           region: Unknown-Unknown
