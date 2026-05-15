@@ -172,7 +172,11 @@ runs:
         echo "Preparing CAS at: $URL"
 
         REPO_FULL_NAME="${GITHUB_REPOSITORY:-${DC_OWNER}/${DC_REPO}}"
-        REF_NAME="${GITHUB_REF_NAME:-}"
+        if [ "${GITHUB_EVENT_NAME:-}" = "pull_request" ] || [ "${GITHUB_EVENT_NAME:-}" = "pull_request_target" ]; then
+          REF_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-}}"
+        else
+          REF_NAME="${GITHUB_REF_NAME:-}"
+        fi
         TRIGGERED_BY="${GITHUB_TRIGGERING_ACTOR:-${GITHUB_ACTOR:-}}"
 
         payload="$(jq -cn \
@@ -363,7 +367,11 @@ runs:
         CORRELATION_ID="$DC_CAS_ID"
 
         REPO_FULL_NAME="${GITHUB_REPOSITORY:-${DC_OWNER}/${DC_REPO}}"
-        REF_NAME="${GITHUB_REF_NAME:-}"
+        if [ "${GITHUB_EVENT_NAME:-}" = "pull_request" ] || [ "${GITHUB_EVENT_NAME:-}" = "pull_request_target" ]; then
+          REF_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-}}"
+        else
+          REF_NAME="${GITHUB_REF_NAME:-}"
+        fi
         TRIGGERED_BY="${GITHUB_TRIGGERING_ACTOR:-${GITHUB_ACTOR:-}}"
 
         # For best per-language behavior, run one job per language (matrix)
@@ -535,7 +543,11 @@ runs:
         CORRELATION_ID="$DC_CAS_ID"
 
         REPO_FULL_NAME="${GITHUB_REPOSITORY:-${DC_OWNER}/${DC_REPO}}"
-        REF_NAME="${GITHUB_REF_NAME:-}"
+        if [ "${GITHUB_EVENT_NAME:-}" = "pull_request" ] || [ "${GITHUB_EVENT_NAME:-}" = "pull_request_target" ]; then
+          REF_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-}}"
+        else
+          REF_NAME="${GITHUB_REF_NAME:-}"
+        fi
         TRIGGERED_BY="${GITHUB_TRIGGERING_ACTOR:-${GITHUB_ACTOR:-}}"
 
 
