@@ -1,4 +1,4 @@
-name: "DigiCert Scan (CodeQL + SBOM)"
+name: "DigiCert Code Monitoring Action"
 description: "Runs CodeQL multi-language scan (languages auto from backend) and generates SBOM. Uploads artifacts for backend ingestion."
 author: "DigiCert"
 
@@ -70,7 +70,7 @@ runs:
         esac
 
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Resolve repo context (owner/repo/ref)
       shell: bash
@@ -173,6 +173,7 @@ runs:
 
         REPO_FULL_NAME="${GITHUB_REPOSITORY:-${DC_OWNER}/${DC_REPO}}"
         REF_NAME="${GITHUB_REF_NAME:-}"
+        TRIGGERED_BY="${GITHUB_TRIGGERING_ACTOR:-${GITHUB_ACTOR:-}}"
 
         payload="$(jq -cn \
           --arg scanName "$SCAN_NAME" \
@@ -184,6 +185,9 @@ runs:
           --arg ref "${GITHUB_REF:-${DC_REF}}" \
           --arg refName "$REF_NAME" \
           --arg sha "${GITHUB_SHA:-}" \
+          --arg actor "${GITHUB_ACTOR:-}" \
+          --arg triggeringActor "${GITHUB_TRIGGERING_ACTOR:-}" \
+          --arg triggeredBy "$TRIGGERED_BY" \
           --arg runId "${GITHUB_RUN_ID:-}" \
           --arg runAttempt "${GITHUB_RUN_ATTEMPT:-}" \
           --arg workflow "${GITHUB_WORKFLOW:-}" \
@@ -201,6 +205,9 @@ runs:
               ref: $ref,
               refName: $refName,
               sha: $sha,
+              actor: $actor,
+              triggeringActor: $triggeringActor,
+              triggeredBy: $triggeredBy,
               eventName: $eventName,
               workflow: $workflow,
               workflowRef: $workflowRef,
@@ -313,14 +320,14 @@ runs:
 
     - name: Initialize CodeQL
       if: ${{ env.DC_SHOULD_RUN == 'true' }}
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v4
       with:
         languages: ${{ steps.langs.outputs.languages }}
         build-mode: ${{ env.DC_CODEQL_BUILD_MODE }}
 
     - name: Perform CodeQL Analysis
       if: ${{ env.DC_SHOULD_RUN == 'true' }}
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@v4
       with:
         upload: false
         output: ${{ env.DC_SARIF_OUTPUT }}
@@ -328,7 +335,7 @@ runs:
     - name: Upload SARIF result as artifact
       if: ${{ env.DC_SHOULD_RUN == 'true' }}
       id: upload_sarif
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ env.DC_SARIF_ARTIFACT_NAME }}
         path: ${{ env.DC_SARIF_OUTPUT }}
@@ -357,6 +364,7 @@ runs:
 
         REPO_FULL_NAME="${GITHUB_REPOSITORY:-${DC_OWNER}/${DC_REPO}}"
         REF_NAME="${GITHUB_REF_NAME:-}"
+        TRIGGERED_BY="${GITHUB_TRIGGERING_ACTOR:-${GITHUB_ACTOR:-}}"
 
         # For best per-language behavior, run one job per language (matrix)
         # and post each language's SARIF separately.
@@ -376,6 +384,9 @@ runs:
           --arg ref "${GITHUB_REF:-${DC_REF}}" \
           --arg refName "$REF_NAME" \
           --arg sha "${GITHUB_SHA:-}" \
+          --arg actor "${GITHUB_ACTOR:-}" \
+          --arg triggeringActor "${GITHUB_TRIGGERING_ACTOR:-}" \
+          --arg triggeredBy "$TRIGGERED_BY" \
           --arg workflow "${GITHUB_WORKFLOW:-}" \
           --arg workflowRef "${GITHUB_WORKFLOW_REF:-}" \
           --arg job "${GITHUB_JOB:-}" \
@@ -394,6 +405,9 @@ runs:
               ref: $ref,
               refName: $refName,
               sha: $sha,
+              actor: $actor,
+              triggeringActor: $triggeringActor,
+              triggeredBy: $triggeredBy,
               eventName: $eventName,
               workflow: $workflow,
               workflowRef: $workflowRef,
@@ -483,7 +497,7 @@ runs:
 
     - name: Generate SBOM (Trivy CycloneDX)
       if: ${{ env.DC_SHOULD_RUN == 'true' }}
-      uses: aquasecurity/trivy-action@master
+      uses: aquasecurity/trivy-action@v0.35.0
       with:
         scan-type: "fs"
         format: "cyclonedx"
@@ -492,7 +506,7 @@ runs:
     - name: Upload SBOM as artifact
       if: ${{ env.DC_SHOULD_RUN == 'true' }}
       id: upload_sbom
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ env.DC_SBOM_ARTIFACT_NAME }}
         path: ${{ env.DC_SBOM_OUTPUT }}
@@ -522,6 +536,8 @@ runs:
 
         REPO_FULL_NAME="${GITHUB_REPOSITORY:-${DC_OWNER}/${DC_REPO}}"
         REF_NAME="${GITHUB_REF_NAME:-}"
+        TRIGGERED_BY="${GITHUB_TRIGGERING_ACTOR:-${GITHUB_ACTOR:-}}"
+
 
         payload="$(jq -cn \
           --arg correlationId "$CORRELATION_ID" \
@@ -534,6 +550,9 @@ runs:
           --arg ref "${GITHUB_REF:-${DC_REF}}" \
           --arg refName "$REF_NAME" \
           --arg sha "${GITHUB_SHA:-}" \
+          --arg actor "${GITHUB_ACTOR:-}" \
+          --arg triggeringActor "${GITHUB_TRIGGERING_ACTOR:-}" \
+          --arg triggeredBy "$TRIGGERED_BY" \
           --arg workflow "${GITHUB_WORKFLOW:-}" \
           --arg workflowRef "${GITHUB_WORKFLOW_REF:-}" \
           --arg job "${GITHUB_JOB:-}" \
@@ -552,6 +571,9 @@ runs:
               ref: $ref,
               refName: $refName,
               sha: $sha,
+              actor: $actor,
+              triggeringActor: $triggeringActor,
+              triggeredBy: $triggeredBy,
               eventName: $eventName,
               workflow: $workflow,
               workflowRef: $workflowRef,

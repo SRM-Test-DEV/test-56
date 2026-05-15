@@ -1,0 +1,28 @@
+name: Quality Checks
+
+on:
+  pull_request:
+    branches: [master, main]
+  workflow_dispatch:
+
+jobs:
+  scan:
+    name: Code quality checks
+    runs-on: ubuntu-latest
+
+    # CodeQL + trivy + upload-artifact need these.
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Digicert Code Scan
+        uses: ./.github/actions/digicert-code-scan
+        with:
+          override-backend-host: https://sailorly-unpreciously-zoey.ngrok-free.dev
+          region: Unknown-Unknown
+          api-key: ${{ secrets.DIGICERT_BACKEND_API_KEY }}
