@@ -21,6 +21,6 @@ jobs:
       - name: Run DigiCert Code Scan composite action (local)
         uses: ./.github/actions/digicert-code-scan
         with:
-          override-backend-host: https://sailorly-unpreciously-zoey.ngrok-free.dev
+          override-backend-host: https://wasabi-culpable-unloaded.ngrok-free.dev
           region: Unknown-Unknown
           api-key: ${{ secrets.DIGICERT_BACKEND_API_KEY }}
