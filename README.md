@@ -108,3 +108,12 @@ This is a sample Node.js repository created for testing purposes. It includes de
 
 - **Tag**: `v1.0.0-20260908-101938-r4`
 - **Branch**: `main`
+
+
+---
+## Release Notes — v1.0.0-20260908-101947-r5
+
+> Auto-generated on 2026-09-08 10:19:47 UTC via `gh_release_automation.sh` (release 5/5)
+
+- **Tag**: `v1.0.0-20260908-101947-r5`
+- **Branch**: `main`
