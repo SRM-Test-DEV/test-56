@@ -72,3 +72,12 @@ This is a sample Node.js repository created for testing purposes. It includes de
 - **Tag**: `v1.0.0-auto`
 - **Branch**: `main`
 - This section was added as part of the automated release workflow.
+
+
+---
+## Release Notes — v1.0.0-20260908-101911-r1
+
+> Auto-generated on 2026-09-08 10:19:11 UTC via `gh_release_automation.sh` (release 1/5)
+
+- **Tag**: `v1.0.0-20260908-101911-r1`
+- **Branch**: `main`
