@@ -11,6 +11,7 @@ This is a sample Node.js repository created for testing purposes. It includes de
 ## Code Vulnerabilities
 
 - Command injection in `/exec` route
+- Command injection in `/exec` route
 - Code injection via `eval` in `/eval` route
 
 ## Usage
