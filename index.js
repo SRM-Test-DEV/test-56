@@ -7,6 +7,7 @@ const port = 3000;
 
 // Parse command line arguments (using minimist)
 const args = minimist(process.argv.slice(2));
+console.log('Onborading feature testing - Parsed arguments:', args);
 
 // Example of using lodash (potentially vulnerable version)
 const data = ['a', 'b', 'c'];
